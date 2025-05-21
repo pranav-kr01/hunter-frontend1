@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="My Test Suite" tests="3" failures="1" time="0.001">
+    <testcase classname="MyTest" name="should pass" time="0.001"/>
+    <testcase classname="MyTest" name="should fail" time="0.001">
+      <failure message="Expected true but received false">Stack trace here</failure>
+    </testcase>
+    <testcase classname="MyTest" name="should also pass" time="0.001"/>
+  </testsuite>
+</testsuites>

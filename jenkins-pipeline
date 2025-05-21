@@ -1,0 +1,69 @@
+pipeline {
+    agent any
+    environment {
+        AWS_ACCOUNT_ID="779846792888"
+        AWS_DEFAULT_REGION="ap-south-1"
+        IMAGE_REPO_NAME="dynamos-frontend"
+        IMAGE_TAG="latest"
+        REPOSITORY_URI = "779846792888.dkr.ecr.ap-south-1.amazonaws.com/dynamos-frontend"
+    }
+
+    stages {
+
+        //stage('Checkout Frontend') {
+            //steps {
+                //checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: '5b4ffddf-b391-4ca4-ac4f-c1df7601a69e', url: 'https://github.com/Chethanvr06/hunter-frontend.git']])
+            //}
+        //}     
+
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build "${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+          
+        }
+      }
+    }
+
+        stage('Logging into AWS ECR') {
+            steps {
+                script {
+                    sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 779846792888.dkr.ecr.ap-south-1.amazonaws.com'
+                }
+            }
+        }    
+   
+    // Uploading Docker images into AWS ECR
+    stage('Pushing to ECR') {
+     steps{  
+         script {
+                sh """docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:$IMAGE_TAG"""
+                sh """docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"""
+         }
+        }
+      }
+    stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // Apply the Kubernetes deployment and service
+                    sh "aws eks update-kubeconfig --region ap-south-1 --name Devops-Cluster"
+                    sh "kubectl delete deployments hunter-backend-app-deployment -n hunter"
+                    sh "sleep 30"
+                    sh "kubectl apply -f hunter-backend-app.yaml"
+                }
+            }
+        }
+
+   }
+
+    //post {
+        //success {
+            // Notify on success
+            //mail bcc: '', body: 'dynamos Frontend pipeline finished successfully', cc: '', from: 'mailto:devops@ifocussystec.com', replyTo: '', subject: 'The dynamos Frontend pipeline success', to: 'mailto:chethan.v@ifocussystec.in'
+        //}
+        //failure {
+            // Notify on failure
+            //mail bcc: '', body: 'dynamos Frontend pipeline failed', cc: '', from: 'mailto:devops@ifocussystec.com', replyTo: '', subject: 'The dynamos Frontend pipeline failed', to: 'mailto:chethan.v@ifocussystec.in'
+        //}
+    //}
+}

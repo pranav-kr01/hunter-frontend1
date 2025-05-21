@@ -1,0 +1,33 @@
+
+.App {
+  text-align: center;
+}
+
+.home-page {
+  margin: 20px;
+}
+
+.home-page h1 {
+  color: #2c3e50;
+}
+
+.home-page p {
+  font-size: 1.2em;
+  color: #34495e;
+}
+
+.home-page section {
+  margin-top: 20px;
+}
+
+.home-page ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.home-page li {
+  background: #ecf0f1;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
