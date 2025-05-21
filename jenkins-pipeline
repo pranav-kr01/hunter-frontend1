@@ -1,11 +1,11 @@
 pipeline {
     agent any
     environment {
-        AWS_ACCOUNT_ID="779846792888"
+        AWS_ACCOUNT_ID="227549687939"
         AWS_DEFAULT_REGION="ap-south-1"
         IMAGE_REPO_NAME="dynamos-frontend"
         IMAGE_TAG="latest"
-        REPOSITORY_URI = "779846792888.dkr.ecr.ap-south-1.amazonaws.com/dynamos-frontend"
+        REPOSITORY_URI = "227549687939.dkr.ecr.ap-south-1.amazonaws.com/dynamos-frontend"
     }
 
     stages {
@@ -28,7 +28,7 @@ pipeline {
         stage('Logging into AWS ECR') {
             steps {
                 script {
-                    sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 779846792888.dkr.ecr.ap-south-1.amazonaws.com'
+                    sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 227549687939.dkr.ecr.ap-south-1.amazonaws.com'
                 }
             }
         }    
